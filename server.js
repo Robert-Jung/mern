@@ -8,7 +8,12 @@ const Comment = require('./src/model/comments')
 const app = express()
 const router = express.Router()
 
+const dotenv = require('dotenv')
+dotenv.config()
+const mongoUrl = process.env.MONGOLAB_URI
+
 const port = process.env.API_PORT || 3001
+mongoose.connect(mongoUrl)
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*')
