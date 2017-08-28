@@ -5,7 +5,7 @@ import registerServiceWorker from './registerServiceWorker'
 
 
 ReactDOM.render(
-  <CommentBox />,
+  <CommentBox/>,
   document.getElementById('root')
 )
 registerServiceWorker()
