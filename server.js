@@ -64,6 +64,13 @@ router.route('/comments/:comment_id')
       })
     })
   })
+  .delete((req, res) => {
+    Comment.remove({_id: req.params.comment_id}, (err, comment) => {
+      if (err)
+        res.send(err)
+      res.json({ message: 'Comment has been deleted' })
+    })
+  })
 
 app.use('/api', router)
 
