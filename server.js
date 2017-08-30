@@ -8,12 +8,16 @@ const Comment = require('./src/model/comments')
 const app = express()
 const router = express.Router()
 
+const port = process.env.API_PORT || 3001
+
 const dotenv = require('dotenv')
 dotenv.config()
-const mongoUrl = process.env.MONGOLAB_URI
 
-const port = process.env.API_PORT || 3001
-mongoose.connect(mongoUrl)
+const mongoUrl = process.env.MONGOLAB_URI
+mongoose.connect(mongoUrl, { useMongoClient: true })
+const db = mongoose.connection
+db.on('error', console.error.bind(console, 'MongoDB connection error:'))
+
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -56,10 +60,11 @@ router.route('/comments/:comment_id')
     Comment.findById(req.params.comment_id, (err, comment) => {
       if (err)
         res.send(err)
-      (req.body.author) ? comment.author = req.body.author : null
-      (req.body.text) ? comment.text = req.body.text : null
+      req.body.author ? comment.author = req.body.author : null
+      req.body.text ? comment.text = req.body.text : null
       comment.save((err) => {
-        if (err) res.send(err)
+        if (err)
+          res.send(err)
         res.json({ message: 'Comment has been updated' })
       })
     })
